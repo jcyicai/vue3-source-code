@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.8/vue.global.js"></script>
+	</head>
+
+	<body>
+		<div id="app"></div>
+
+		<script>
+			const { compile, createApp } = Vue
+
+			const html = `<div class="test">hello render</div>`
+			// 通过 compile 编译器 生成 render 函数  编译时
+			const renderFn = compile(html)
+			console.log(renderFn)
+			// 将 render 函数 渲染成 真实 dom 节点  运行时
+			const app = createApp({
+				render: renderFn, // 运行时 运行 render 函数 完成渲染
+			})
+			// 挂载到 app 节点上
+			app.mount('#app')
+
+			// 所以 vue 称为 编译时 + 运行时
+			// compile 核心作用是将 template 中的 html 编译成 render 函数
+			// 所以 compile 实际是把 html 节点 编译成 render 函数
+		</script>
+	</body>
+</html>

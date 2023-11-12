@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// 增加一万个 节点 查看耗时
+			console.time('element')
+			const length = 10000
+			for (let i = 0; i < length; i++) {
+				const div = document.createElement('div')
+				document.body.appendChild(div)
+			}
+			console.timeEnd('element')
+
+			// 增加一万个 js 查看耗时
+			console.time('js')
+			const arr = []
+			for (let i = 0; i < length; i++) {
+				const ele = {
+					type: 'div',
+				}
+				arr.push(ele)
+			}
+			console.timeEnd('js')
+
+			// dom 操作要比 js 操作更耗时
+
+			// 为什么 vue 要设计成 编译时 + 运行时
+			// 1. 初次渲染  挂载
+			// 2. 挂载渲染  打补丁
+
+			// 1.针对 纯运行时：因为不存在编译器，所以我们只能够提供一个复杂的 js 对象。
+			// 2.针对 纯编译时：因为缺少运行时，所以它只能把分析差异的操作，放在编译时进行，
+			//   同样因为省略了运行时，所以速度可能会更快，但这种方式将损失领会行。
+			// 3.运行时 + 编译时： 比如 vue 或 react 都通过这种方式进行构建，
+			//   使其可以在保持灵活性的基础上，尽量进行性能优化，从而达到一种平衡。
+
+			// 副作用指的是：当我们对数据进行 getter 或 setter操作时，产生的一系列后果。
+			/* <template>
+				<div>
+					<p>姓名：{{ obj.name}}</p>
+					<p>年龄：{{ obj.age }}</p>
+				</div>
+			</template> 
+
+			const obj = ref({
+				name: 'Jason Chen',
+				age: '18'
+			})
+			// setter 值修改 会造成 p 两个标签的变化 从而产生 副作用
+			obj.value = {
+				name: 'John',
+				age: ''
+			} */
+		</script>
+	</body>
+</html>

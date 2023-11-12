@@ -19,7 +19,7 @@
         const container = document.querySelector('#app')
         render(vnode, container) */
 
-        // 手写 render
+        // vnode 数据
         const vnode = {
             type: 'div',
             prop: {
@@ -27,15 +27,20 @@
             },
             children: 'hello render'
         }
-
+        // 创建 render 渲染函数
         function render(vnode) {
+            // 根据 type 生成 element
             const ele = document.createElement(vnode.type)
+            // 把 prop 中的 class 赋值给 ele 的 className
             ele.className = vnode.prop.class
+            // 把 children 赋值给 ele 的 innerText
             ele.innerText = vnode.children
+            // 找到父节点
             const container = document.querySelector('#app')
+            // 把 ele 作为子节点 插入 父节点中
             container.appendChild(ele)
         }
-
+        // 执行 render 渲染函数
         render(vnode)
 
         // 运行时 将 render 函数 把 vnode 渲染成真实 dom 节点
