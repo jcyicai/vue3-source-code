@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.8/vue.global.js"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script>
+        // render
+        /* const { render, h } = Vue
+        const vnode = h('div', {
+            class: 'test'
+        }, 'hello render')
+        const container = document.querySelector('#app')
+        render(vnode, container) */
+
+        // 手写 render
+        const vnode = {
+            type: 'div',
+            prop: {
+                class: 'test'
+            },
+            children: 'hello render'
+        }
+
+        function render(vnode) {
+            const ele = document.createElement(vnode.type)
+            ele.className = vnode.prop.class
+            ele.innerText = vnode.children
+            const container = document.querySelector('#app')
+            container.appendChild(ele)
+        }
+
+        render(vnode)
+
+        // 运行时 将 render 函数 把 vnode 渲染成真实 dom 节点
+    </script>
+</body>
+
+</html>
