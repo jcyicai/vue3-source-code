@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// 数量初始值
+			let quantity = 2
+
+			// 定义商品
+			let product = {
+				price: 10,
+				quantity: quantity,
+			}
+
+			// 总价格
+			let total = 0
+
+			// 计算总价格
+			let effect = () => {
+				total = product.price * product.quantity
+			}
+
+			// 执行
+			effect()
+			console.log(`总金额：${total}`)
+
+			// Object.defineProperty
+			Object.defineProperty(product, 'quantity', {
+				get() {
+					console.log('getter')
+					return quantity
+				},
+				set(newVal) {
+					console.log('setter')
+					// 修改数量
+					quantity = newVal
+					// 重新计算
+					effect()
+				},
+			})
+		</script>
+	</body>
+</html>

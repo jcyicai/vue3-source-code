@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			const p1 = {
+				firstName: 'c',
+				lastName: 'd',
+				// get 作用 可以直接 p1.fullName 获取值 而 无需 p1.fullName()
+				get fullName() {
+					return this.firstName + this.lastName
+				},
+			}
+
+			const p2 = {
+				firstName: 'a',
+				lastName: 'b',
+				get fullName() {
+					return this.firstName + this.lastName
+				},
+			}
+
+			/* console.log(p1.fullName)
+			console.log(Reflect.get(p1, 'fullName'))
+			console.log(Reflect.get(p1, 'fullName', p2)) */
+
+			const p3 = {
+				firstName: 'e',
+				lastName: 'f',
+				get fullName() {
+					console.log(this)
+					return this.firstName + this.lastName
+				},
+			}
+
+			const proxy = new Proxy(p3, {
+				get(target, key, receiver) {
+					console.log('getter触发了')
+					// Reflect.get(target, propertyKey[, receiver])
+					// 获取对象身上某个属性的值，类似于 target[name]
+					// 将 receiver 作为 this  这里的 receiver 是 proxy 实例
+					return Reflect.get(target, key, receiver)
+				},
+			})
+
+			console.log(proxy.fullName)
+		</script>
+	</body>
+</html>

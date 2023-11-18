@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// 定义商品
+			let product = {
+				price: 10,
+				quantity: 2,
+			}
+
+			// proxyProduct 代理对象 (修改它 才会触发 getter 和 setter)
+			// product 被代理对象
+			const proxyProduct = new Proxy(product, {
+				get(target, key, receiver) {
+					return target[key]
+				},
+				set(target, key, newVal, receiver) {
+					target[key] = newVal
+					effect()
+					return true
+				},
+			})
+
+			// 总价格
+			let total = 0
+
+			// 计算总价格
+			let effect = () => {
+				total = product.price * product.quantity
+				console.log(`总金额：${total}`)
+			}
+		</script>
+	</body>
+</html>
