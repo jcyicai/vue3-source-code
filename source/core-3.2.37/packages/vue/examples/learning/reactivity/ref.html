@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../../dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const { ref, effect } = Vue
+      const obj = ref({
+        name: 'jc',
+        age: 18
+      })
+      effect(() => {
+        document.querySelector('#app').innerHTML = obj.value.name
+      })
+
+      setTimeout(() => {
+        // 触发了一次 ref 的 get value
+        // 触发了一个 reactive 的 setter
+        obj.value.name = 'cc'
+      }, 2000)
+
+      // RefImpl 构造函数
+      class RefImpl {
+        // 实例的 getter 行为： ref.value
+        get value() {
+          return 'get value'
+        }
+        // 实例的 setter 行为： ref.value = xxx
+        set value(newVal) {
+          console.log('set value')
+        }
+      }
+      const newRef = new RefImpl()
+      console.log(newRef)
+    </script>
+  </body>
+</html>

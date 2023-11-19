@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../../dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+      const { ref, effect } = Vue
+      const name = ref('jc')
+
+      effect(() => {
+        document.querySelector('#app').innerHTML = name.value
+      })
+
+      setTimeout(() => {
+        name.value = 'cc'
+      }, 2000)
+    </script>
+  </body>
+</html>
