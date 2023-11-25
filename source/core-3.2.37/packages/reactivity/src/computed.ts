@@ -32,7 +32,7 @@ export class ComputedRefImpl<T> {
   public readonly __v_isRef = true
   public readonly [ReactiveFlags.IS_READONLY]: boolean
 
-  public _dirty = true
+  public _dirty = true // 脏变量 关键
   public _cacheable: boolean
 
   constructor(
@@ -44,7 +44,7 @@ export class ComputedRefImpl<T> {
     this.effect = new ReactiveEffect(getter, () => {
       if (!this._dirty) {
         this._dirty = true
-        triggerRefValue(this)
+        triggerRefValue(this) // dirty 为 false 时 触发依赖
       }
     })
     this.effect.computed = this
@@ -55,7 +55,7 @@ export class ComputedRefImpl<T> {
   get value() {
     // the computed ref may get wrapped by other proxies e.g. readonly() #3376
     const self = toRaw(this)
-    trackRefValue(self)
+    trackRefValue(self) // 依赖收集
     if (self._dirty || !self._cacheable) {
       self._dirty = false
       self._value = self.effect.run()!
@@ -83,13 +83,13 @@ export function computed<T>(
 ) {
   let getter: ComputedGetter<T>
   let setter: ComputedSetter<T>
-
+  // getterOrOptions 即传入的函数
   const onlyGetter = isFunction(getterOrOptions)
   if (onlyGetter) {
     getter = getterOrOptions
     setter = __DEV__
       ? () => {
-          console.warn('Write operation failed: computed value is readonly')
+          console.warn('Write operation failed: computed value is readonly') // 理解为空函数
         }
       : NOOP
   } else {
