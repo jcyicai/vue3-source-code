@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../../dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const { reactive, effect, computed, watch } = Vue
+      // 1. reactive 构建响应性数据
+      const obj = reactive({
+        name: 'jc'
+      })
+
+      // 2. 执行了 watch 函数
+      watch(obj, (value, oldValue) => {
+        console.log('watch 触发了')
+        console.log(
+          `value: ${JSON.stringify(value)}, oldValue: ${JSON.stringify(
+            oldValue
+          )}`
+        )
+      })
+
+      // 3. 两秒后触发 setter 行为
+      setTimeout(() => {
+        obj.name = 'cc'
+      }, 2000)
+    </script>
+  </body>
+</html>

@@ -205,11 +205,13 @@ function doWatch(
   let isMultiSource = false
 
   if (isRef(source)) {
+    // 是否 ref 类型
     getter = () => source.value
     forceTrigger = isShallow(source)
   } else if (isReactive(source)) {
+    // 是否 reactive 类型
     getter = () => source
-    deep = true
+    deep = true // 主动开启 深度监听
   } else if (isArray(source)) {
     isMultiSource = true
     forceTrigger = source.some(s => isReactive(s) || isShallow(s))
@@ -268,7 +270,7 @@ function doWatch(
   }
 
   if (cb && deep) {
-    const baseGetter = getter
+    const baseGetter = getter // getter 为 () => source
     getter = () => traverse(baseGetter())
   }
 
@@ -295,8 +297,9 @@ function doWatch(
     }
     return NOOP
   }
-
+  // 定义 oldValue  isMultiSource 是否有多个源 [value1, value2] 需要监听
   let oldValue = isMultiSource ? [] : INITIAL_WATCHER_VALUE
+  // job 核心逻辑
   const job: SchedulerJob = () => {
     if (!effect.active) {
       return
@@ -345,7 +348,7 @@ function doWatch(
     scheduler = () => queuePostRenderEffect(job, instance && instance.suspense)
   } else {
     // default: 'pre'
-    scheduler = () => queuePreFlushCb(job)
+    scheduler = () => queuePreFlushCb(job) // 调度器赋值  也是核心逻辑
   }
 
   const effect = new ReactiveEffect(getter, scheduler)
@@ -358,9 +361,10 @@ function doWatch(
   // initial run
   if (cb) {
     if (immediate) {
-      job()
+      // 默认自动执行 watch 一次
+      job() // job 触发意味着 watch 被立即执行一次
     } else {
-      oldValue = effect.run()
+      oldValue = effect.run() // 等于执行 fn 函数 即 () => traverse(baseGetter())  即 () => source 即 传入的监听数据
     }
   } else if (flush === 'post') {
     queuePostRenderEffect(
@@ -372,7 +376,7 @@ function doWatch(
   }
 
   return () => {
-    effect.stop()
+    effect.stop() // 监听停止
     if (instance && instance.scope) {
       remove(instance.scope.effects!, effect)
     }

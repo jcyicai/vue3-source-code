@@ -66,6 +66,7 @@ export function callWithErrorHandling(
   args?: unknown[]
 ) {
   let res
+  // 统一处理监听 错误
   try {
     res = args ? fn(...args) : fn()
   } catch (err) {

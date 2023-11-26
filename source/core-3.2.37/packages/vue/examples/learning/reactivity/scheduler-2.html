@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../../dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // queuePreFlushCb 需要在 runtime-core/src/index.ts nextTick旁设置，原始是未导出的
+      const { reactive, effect, queuePreFlushCb } = Vue
+      const obj = reactive({
+        count: 1
+      })
+
+      effect(
+        () => {
+          console.log(obj.count)
+        },
+        {
+          scheduler() {
+            queuePreFlushCb(() => console.log(obj.count))
+          }
+        }
+      )
+
+      obj.count = 2
+      obj.count = 3
+    </script>
+  </body>
+</html>

@@ -154,9 +154,9 @@ export function flushPreFlushCbs(
   parentJob: SchedulerJob | null = null
 ) {
   if (pendingPreFlushCbs.length) {
-    currentPreFlushParentJob = parentJob
-    activePreFlushCbs = [...new Set(pendingPreFlushCbs)]
-    pendingPreFlushCbs.length = 0
+    currentPreFlushParentJob = parentJob // job 函数
+    activePreFlushCbs = [...new Set(pendingPreFlushCbs)] // 取代 pendingPreFlushCbs
+    pendingPreFlushCbs.length = 0 // 置空 下次不会再触发
     if (__DEV__) {
       seen = seen || new Map()
     }
@@ -171,7 +171,7 @@ export function flushPreFlushCbs(
       ) {
         continue
       }
-      activePreFlushCbs[preFlushIndex]()
+      activePreFlushCbs[preFlushIndex]() // 当前 job 函数执行
     }
     activePreFlushCbs = null
     preFlushIndex = 0
