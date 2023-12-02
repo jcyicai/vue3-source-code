@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="app"></div>
+		<script>
+			// <div>hello render</div>
+			const vnode = {
+				type: 'div',
+				children: 'hello render',
+			}
+
+			// <div>patch render</div>
+			const vnode2 = {
+				type: 'div',
+				children: 'patch render',
+			}
+
+			function render(oldVNode, newVNode, container) {
+				if (!oldVNode) {
+					mount(newVNode, container)
+				} else {
+					patch(oldVNode, newVNode, container)
+				}
+			}
+
+			function mount(vnode, container) {
+				const ele = document.createElement(vnode.type)
+				ele.innerText = vnode.children
+				container.appendChild(ele)
+			}
+
+			function unmount(container) {
+				container.innerHTML = ''
+			}
+
+			function patch(oldVNode, newVNode, container) {
+				unmount(container)
+				const ele = document.createElement(newVNode.type)
+				ele.innerText = newVNode.children
+				container.appendChild(ele)
+			}
+
+			const container = document.querySelector('#app')
+
+			render(null, vnode, container)
+
+			setTimeout(() => {
+				render(vnode, vnode2, container)
+			}, 2000)
+		</script>
+	</body>
+</html>
