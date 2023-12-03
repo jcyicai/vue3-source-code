@@ -440,7 +440,7 @@ function createBaseVNode(
   } as VNode
 
   if (needFullChildrenNormalization) {
-    normalizeChildren(vnode, children)
+    normalizeChildren(vnode, children) // 创建子节点
     // normalize suspense children
     if (__FEATURE_SUSPENSE__ && shapeFlag & ShapeFlags.SUSPENSE) {
       ;(type as typeof SuspenseImpl).normalize(vnode)
@@ -505,7 +505,7 @@ function _createVNode(
     }
     type = Comment
   }
-
+  // 是否是 vnode 通过 __v_isVNode 来判断
   if (isVNode(type)) {
     // createVNode receiving an existing vnode. This happens in cases like
     // <component :is="vnode"/>
@@ -538,10 +538,10 @@ function _createVNode(
   // class & style normalization.
   if (props) {
     // for reactive or proxy objects, we need to clone it to enable mutation.
-    props = guardReactiveProps(props)!
-    let { class: klass, style } = props
+    props = guardReactiveProps(props)! // 解析 props
+    let { class: klass, style } = props // 结构  class style
     if (klass && !isString(klass)) {
-      props.class = normalizeClass(klass)
+      props.class = normalizeClass(klass) // 增强 class
     }
     if (isObject(style)) {
       // reactive state objects need to be cloned since they are likely to be
@@ -554,7 +554,7 @@ function _createVNode(
   }
 
   // encode the vnode type information into a bitmap
-  const shapeFlag = isString(type)
+  const shapeFlag = isString(type) // 根据 type 类型进行 shapeFlag 赋值 当前为 div 则 ShapeFlags.ELEMENT
     ? ShapeFlags.ELEMENT
     : __FEATURE_SUSPENSE__ && isSuspense(type)
     ? ShapeFlags.SUSPENSE
@@ -742,7 +742,7 @@ export function cloneIfMounted(child: VNode): VNode {
 
 export function normalizeChildren(vnode: VNode, children: unknown) {
   let type = 0
-  const { shapeFlag } = vnode
+  const { shapeFlag } = vnode // 当前shapeFlag 是 1 children是字符串
   if (children == null) {
     children = null
   } else if (isArray(children)) {
@@ -782,7 +782,7 @@ export function normalizeChildren(vnode: VNode, children: unknown) {
     children = { default: children, _ctx: currentRenderingInstance }
     type = ShapeFlags.SLOTS_CHILDREN
   } else {
-    children = String(children)
+    children = String(children) // 此时 'hello render'
     // force teleport children to array so it can be moved around
     if (shapeFlag & ShapeFlags.TELEPORT) {
       type = ShapeFlags.ARRAY_CHILDREN
@@ -792,7 +792,7 @@ export function normalizeChildren(vnode: VNode, children: unknown) {
     }
   }
   vnode.children = children as VNodeNormalizedChildren
-  vnode.shapeFlag |= type
+  vnode.shapeFlag |= type // 9 按位或赋值  vnode.shapeFlag |= type 等同于 vnode.shapeFlag = vnode.shapeFlag | type
 }
 
 export function mergeProps(...args: (Data & VNodeProps)[]) {

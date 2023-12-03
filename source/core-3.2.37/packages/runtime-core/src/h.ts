@@ -172,7 +172,7 @@ export function h<P>(
 
 // Actual implementation
 export function h(type: any, propsOrChildren?: any, children?: any): VNode {
-  const l = arguments.length
+  const l = arguments.length // 参数长度
   if (l === 2) {
     if (isObject(propsOrChildren) && !isArray(propsOrChildren)) {
       // single vnode without props
@@ -189,6 +189,7 @@ export function h(type: any, propsOrChildren?: any, children?: any): VNode {
     if (l > 3) {
       children = Array.prototype.slice.call(arguments, 2)
     } else if (l === 3 && isVNode(children)) {
+      // 参数为3个， children是否是 vnode
       children = [children]
     }
     return createVNode(type, propsOrChildren, children)

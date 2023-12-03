@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../../dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const { h } = Vue
+      // 先执行了 children h 函数 p1  shapeFlag为17 代表是 element + array children 为9 代表是 element + text children
+      const vnode = h(
+        'div',
+        {
+          class: 'test'
+        },
+        [h('p', 'p1'), h('p', 'p2'), h('p', 'p3')]
+      )
+
+      console.log(vnode)
+    </script>
+  </body>
+</html>
