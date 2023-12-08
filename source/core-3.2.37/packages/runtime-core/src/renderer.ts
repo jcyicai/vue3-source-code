@@ -1654,8 +1654,10 @@ function baseCreateRenderer(
     }
 
     // children has 3 possibilities: text, array or no children.
+    // 新节点为 text 节点
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       // text children fast path
+      // 旧节点为 array 节点
       if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
         unmountChildren(c1 as VNode[], parentComponent, parentSuspense)
       }
@@ -1663,8 +1665,10 @@ function baseCreateRenderer(
         hostSetElementText(container, c2 as string)
       }
     } else {
+      // 旧节点为 array 节点
       if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
         // prev children was array
+        // 新节点为 array 节点
         if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
           // two arrays, cannot assume anything, do full diff
           patchKeyedChildren(
@@ -1685,10 +1689,12 @@ function baseCreateRenderer(
       } else {
         // prev children was text OR null
         // new children is array OR null
+        // 旧节点为 text 节点
         if (prevShapeFlag & ShapeFlags.TEXT_CHILDREN) {
           hostSetElementText(container, '')
         }
         // mount new if array
+        // 新节点为 array 节点
         if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
           mountChildren(
             c2 as VNodeArrayChildren,
