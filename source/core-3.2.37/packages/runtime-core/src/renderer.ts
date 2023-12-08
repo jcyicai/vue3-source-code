@@ -352,21 +352,23 @@ function baseCreateRenderer(
   // Note: functions inside this closure should use `const xxx = () => {}`
   // style in order to prevent being inlined by minifiers.
   const patch: PatchFn = (
-    n1,
-    n2,
-    container,
-    anchor = null,
+    n1, // 旧节点
+    n2, // 新节点
+    container, // 容器
+    anchor = null, // 锚点
     parentComponent = null,
     parentSuspense = null,
     isSVG = false,
     slotScopeIds = null,
     optimized = __DEV__ && isHmrUpdating ? false : !!n2.dynamicChildren
   ) => {
+    // 新旧节点是否相同
     if (n1 === n2) {
       return
     }
 
     // patching & not same type, unmount old tree
+    // 存在旧节点 且 新旧节点类型是否相同
     if (n1 && !isSameVNodeType(n1, n2)) {
       anchor = getNextHostNode(n1)
       unmount(n1, parentComponent, parentSuspense, true)
@@ -379,6 +381,7 @@ function baseCreateRenderer(
     }
 
     const { type, ref, shapeFlag } = n2
+    // 根据 新节点类型 判断
     switch (type) {
       case Text:
         processText(n1, n2, container, anchor)
@@ -582,6 +585,7 @@ function baseCreateRenderer(
     optimized: boolean
   ) => {
     isSVG = isSVG || (n2.type as string) === 'svg'
+    // 旧节点不存在 进行 挂载
     if (n1 == null) {
       mountElement(
         n2,
@@ -631,6 +635,7 @@ function baseCreateRenderer(
       // only do this in production since cloned trees cannot be HMR updated.
       el = vnode.el = hostCloneNode(vnode.el)
     } else {
+      // 执行 createElement 方法
       el = vnode.el = hostCreateElement(
         vnode.type as string,
         isSVG,
@@ -640,7 +645,9 @@ function baseCreateRenderer(
 
       // mount children first, since some props may rely on child content
       // being already rendered, e.g. `<select value>`
+      // 挂载子节点
       if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+        // setElementText 方法
         hostSetElementText(el, vnode.children as string)
       } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
         mountChildren(
@@ -662,6 +669,7 @@ function baseCreateRenderer(
       if (props) {
         for (const key in props) {
           if (key !== 'value' && !isReservedProp(key)) {
+            // 执行 runtime-dom/src/patchProp.ts中的 patchProp 方法
             hostPatchProp(
               el,
               key,
@@ -716,6 +724,7 @@ function baseCreateRenderer(
     if (needCallTransitionHooks) {
       transition!.beforeEnter(el)
     }
+    // 插入到 container 中
     hostInsert(el, container, anchor)
     if (
       (vnodeHook = props && props.onVnodeMounted) ||

@@ -22,6 +22,7 @@ export const patchProp: DOMRendererOptions['patchProp'] = (
   unmountChildren
 ) => {
   if (key === 'class') {
+    // runtime-dom/src/modules/class.ts 中
     patchClass(el, nextValue, isSVG)
   } else if (key === 'style') {
     patchStyle(el, prevValue, nextValue)
