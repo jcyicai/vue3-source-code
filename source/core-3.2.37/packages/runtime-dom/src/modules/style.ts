@@ -4,12 +4,13 @@ import { camelize } from '@vue/runtime-core'
 type Style = string | Record<string, string | string[]> | null
 
 export function patchStyle(el: Element, prev: Style, next: Style) {
-  const style = (el as HTMLElement).style
-  const isCssString = isString(next)
+  const style = (el as HTMLElement).style // 从 el 获取 style 属性
+  const isCssString = isString(next) // next { color: red } vue 对其增强 可接收 数组 对象 字符串
   if (next && !isCssString) {
     for (const key in next) {
       setStyle(style, key, next[key])
     }
+    // 该逻辑为了处理更新时 旧的有没存在 做删除处理
     if (prev && !isString(prev)) {
       for (const key in prev) {
         if (next[key] == null) {
@@ -43,14 +44,14 @@ function setStyle(
   val: string | string[]
 ) {
   if (isArray(val)) {
-    val.forEach(v => setStyle(style, name, v))
+    val.forEach(v => setStyle(style, name, v)) // 递归处理 当前 val 为 red
   } else {
     if (val == null) val = ''
     if (name.startsWith('--')) {
       // custom property definition
       style.setProperty(name, val)
     } else {
-      const prefixed = autoPrefix(style, name)
+      const prefixed = autoPrefix(style, name) // 缓存处理
       if (importantRE.test(val)) {
         // !important
         style.setProperty(
@@ -59,7 +60,7 @@ function setStyle(
           'important'
         )
       } else {
-        style[prefixed as any] = val
+        style[prefixed as any] = val // 即 style.color = red
       }
     }
   }

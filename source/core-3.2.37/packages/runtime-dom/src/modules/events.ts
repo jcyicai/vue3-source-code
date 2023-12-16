@@ -50,7 +50,7 @@ export function addEventListener(
   handler: EventListener,
   options?: EventListenerOptions
 ) {
-  el.addEventListener(event, handler, options)
+  el.addEventListener(event, handler, options) // 这里的handler 为 invoker，并没有把真正事件传入，而是通过 invoker.value来触发
 }
 
 export function removeEventListener(
@@ -71,16 +71,16 @@ export function patchEvent(
 ) {
   // vei = vue event invokers
   const invokers = el._vei || (el._vei = {})
-  const existingInvoker = invokers[rawName]
+  const existingInvoker = invokers[rawName] // 缓存
   if (nextValue && existingInvoker) {
     // patch
     existingInvoker.value = nextValue
   } else {
-    const [name, options] = parseName(rawName)
+    const [name, options] = parseName(rawName) // 拆解为小写 是为了 addEventListener 添加事件中 type 是小写
     if (nextValue) {
-      // add
+      // add 事件进行缓存 invokers[rawName]
       const invoker = (invokers[rawName] = createInvoker(nextValue, instance))
-      addEventListener(el, name, invoker, options)
+      addEventListener(el, name, invoker, options) // 添加事件
     } else if (existingInvoker) {
       // remove
       removeEventListener(el, name, existingInvoker, options)
@@ -118,6 +118,7 @@ function createInvoker(
     const timeStamp = e.timeStamp || _getNow()
 
     if (skipTimestampCheck || timeStamp >= invoker.attached - 1) {
+      // 可以打上断点，点击后触发该事件 本质上还是触发事件，只是做了 try catch 错误拦截
       callWithAsyncErrorHandling(
         patchStopImmediatePropagation(e, invoker.value),
         instance,
@@ -126,9 +127,9 @@ function createInvoker(
       )
     }
   }
-  invoker.value = initialValue
+  invoker.value = initialValue // 为传入的点击函数 onClick() { alert('点击')} 相当于 invoker.value被触发 即点击行为被触发
   invoker.attached = getNow()
-  return invoker
+  return invoker // 返回 invoker 函数
 }
 
 function patchStopImmediatePropagation(

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button>点击</button>
+    <script>
+      // 我们知道 添加移除事件都是比较耗性能的
+      /*  const btnEle = document.querySelector('button')
+      const invoker = () => {
+        alert('hello')
+      }
+
+      btnEle.addEventListener('click', invoker)
+
+      setTimeout(() => {
+        btnEle.removeEventListener('click', invoker)
+        btnEle.addEventListener('click', () => {
+          alert('你好')
+        })
+      }, 2000) */
+
+      // evi 作用 通过调用和修改 value 属性 提升性能
+      // 它充当着一个事件缓存器
+      const btnEle = document.querySelector('button')
+      const invoker = () => {
+        invoker.value()
+      }
+      invoker.value = () => {
+        alert('hello')
+      }
+
+      btnEle.addEventListener('click', invoker)
+
+      setTimeout(() => {
+        invoker.value = () => {
+          alert('你好')
+        }
+      }, 2000)
+    </script>
+  </body>
+</html>
